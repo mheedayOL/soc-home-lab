@@ -20,7 +20,9 @@ Wazuh, Ubuntu Server, Windows 10
 - [ ] Custom detection rules
 
 ## Write-ups
-Coming soon. Each stage will be added as a folder in this repo.
+Part 1: 01-lab-setup
+Part 2: Wazuh installation
+Each stage will be added as a folder in this repo.
 
 ## Disclaimer
 All testing is done in an isolated lab on machines I own.
