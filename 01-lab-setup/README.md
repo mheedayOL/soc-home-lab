@@ -18,10 +18,13 @@ To set up virtual machines that wil be useful for this home lab
 
 4. Then https://www.microsoft.com/en-us/software-download/windows10 to create the installation media to download the windows 10 iso image
 5. Next, I created another virtual machine and installed the windows 10 iso on it.
+   ![Windows](../screenshots/windows.png)
    
 7. | Hostname | OS | IP | MAC | Role | Network Adapter Type | Default gateway | DNS |
    | --- | --- | --- | --- | --- | --- | --- | --- |
-   | Windows | Ubuntu 24.04.5 LTS | 192.168.253.129 | 00:0c:29:19:e0:85 | Endpoint | NAT | 192.168.253.2 | 192.168.253.2 |
+   | DESKTOP-M52JJJH | Windows 10 pro | 192.168.253.131 | 00:0c:29:19:e0:85 | Endpoint | NAT | 192.168.253.2 | 192.168.253.2 |
+
+   ![Running Processes](../screenshot/running-processes.png)
 
 8. Next, I created another virtual machine for Kali Linux
   
