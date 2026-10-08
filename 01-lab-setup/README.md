@@ -30,10 +30,10 @@ To set up virtual machines that wil be useful for this home lab
    | Kali | Kali GNU/Linux 2025.4 | 192.168.253.128/24 | 00:0c:29:15:a1:b7 |Security Testing | NAT | 192.168.253.2 | 192.168.253.2 |
 
 10. Created at least two users and one group; added and removed a user from the group
-![User created](../screenshots/user-created.png)
+![User created](../screenshots/User-created.png)
 
 11. Created a test file/directory. Allow one user, restrict another, change ownership and modes, test access
-![Test directory](../screenshots/test-directory.png)
+![Test directory](../screenshots/Test-directory.png)
 
 12. Who can access it, with what permissions, and why.
 
