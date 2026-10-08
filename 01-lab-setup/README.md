@@ -30,13 +30,25 @@ To set up virtual machines that wil be useful for this home lab
    | Kali | Kali GNU/Linux 2025.4 | 192.168.253.128/24 | 00:0c:29:15:a1:b7 |Security Testing | NAT | 192.168.253.2 | 192.168.253.2 |
 
 10. Created at least two users and one group; added and removed a user from the group
+![User created](../screenshots/screenshot(01).png)
 
-Create a test file/directory. Allow one user, restrict another, change ownership and modes, test access, and explain who can access it, with what permissions, and why.
-Perform normal logins plus a few controlled failed logins against your own lab only.
-Perform at least one admin action: sudo, start/stop a service, install/update a package, or edit a configuration file.
+11. Created a test file/directory. Allow one user, restrict another, change ownership and modes, test access
+![Test directory](../screenshots/screenshot(02).png)
 
+12. Who can access it, with what permissions, and why.
 
+| Item | Mode | Owner/group | Who can do what | Why |
+| --- | --- | --- | --- | --- |
+| /srv/soc_data | 770 | root / soc_team | root and soc_team members can list, enter and create files. Others get nothing. | Owner and group get rwx, others get ---. A user needs x on a directory to enter it. |
+| report.txt |	640 | alice / soc_team | alice can read and write. Group members can only read. Others get nothing. | Owner rw-, group r--, others ---. |
+| bob (not in group) |  |  | Blocked at the directory | bob falls under "others", which has no permissions. |
+| bob (in group) |  |  | Can read the file, cannot write | The group has read-only access on the file. |
 
+13. normal logins ![Normal login](../screenshots/normal-login.png)
+14. I ran a few controlled failed logins against my own lab. ![Failed logins](../screenshots/failed-login.png)
+15. Then I checked the evidence in the logs ![here](../screenshots/log-evidence.png)
 
 ## Results
 Successfully installed 3 VMs [Ubuntu Server, Windows 10 and Kali Linux]
+Established a connection between all 3 VMs
+Performed normal logins and failed logins and checked the evidence in the logs
