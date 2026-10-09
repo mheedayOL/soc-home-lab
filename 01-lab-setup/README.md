@@ -92,16 +92,15 @@ According to the image above, I found the following information for some selecte
 | 192.168.253.128 | 192.168.253.129 | TCP | src 36696 dst 22 | Flags (ACK) Window size 256  | ssh into ubuntu machine | These packets appear because the two machines are opening the connection | 
 | 176.97.192.150 | 192.168.253.128 | NTP | src 123 dst 46182 | Flags 0x24 Leap Indicator: no warning | Ubuntu server pinged Kali Machine | normal background traffic | 
 
-Controlled Security Activity
-I completed two controlled security activities against the Ubuntu Server from the Kali Linux VM.
+Controlled Security Activity: I completed two controlled security activities against the Ubuntu Server from the Kali Linux VM.
 
 Nmap Port Scan from kali vm against ubuntu vm 
 To perform controlled reconnaissance and identify exposed ports/services on the Ubuntu server.
 
 ![Nmap scan results](../screenshots/nmap-scan.png)
 
-Controlled Failed SSH Authentication
-To generate controlled authentication-failure activity and observe the evidence produced by the SSH service.
+Controlled Failed SSH Authentication to generate controlled authentication-failure activity and observe the evidence produced by the SSH service.
+
 Activity:Entered an incorrect password 2 times.
 Evidence: Permission denied` on Kali ![Denied](../screenshots/denied.png) 
 
