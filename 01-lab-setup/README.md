@@ -1,7 +1,7 @@
 # 01: Lab Setup
 
 ## Objective
-To set up virtual machines that wil be useful for this home lab
+To build, baseline and investigate a small IT environment
 
 ## Environment
 - Host machine: [HP Elitebook Folio 1040 G3, 8GB RAM, core i5]
@@ -73,4 +73,69 @@ To set up virtual machines that wil be useful for this home lab
 ## Results
 Successfully installed 3 VMs [Ubuntu Server, Windows 10 and Kali Linux]
 Established a connection between all 3 VMs
-Performed normal logins and failed logins and checked the evidence in the logs
+
+![Kali to Windows](../screenshots/kali-to-windows.png)
+
+![Windows](../screenshots/window-to-ubuntu.png)
+
+![Ubuntu](../screenshots/ubuntu-to-kali.png)
+
+Network Baseline (Wireshark)
+I captured normal traffic(ping, DNS lookup, web/HTTPS, a TCP connection, SSH to ubuntu machine)
+
+![packet capture](../screenshots/packet-capture.png) 
+
+According to the image above, I found the following information for some selected activity
+
+| Source IP | Destination IP | Protocol | Ports | Key Packet Information | activity that generated it | why it appears in Wireshark |
+| --- | --- | --- | --- | --- | --- | --- |
+| 192.168.253.128 | 192.168.253.129 | TCP | src 36696 dst 22 | Flags (ACK) Window size 256  | ssh into ubuntu machine | These packets appear because the two machines are opening the connection | 
+| 176.97.192.150 | 192.168.253.128 | NTP | src 123 dst 46182 | Flags 0x24 Leap Indicator: no warning | Ubuntu server pinged Kali Machine | normal background traffic | 
+
+Controlled Security Activity
+I completed two controlled security activities against the Ubuntu Server from the Kali Linux VM.
+
+Nmap Port Scan from kali vm against ubuntu vm 
+To perform controlled reconnaissance and identify exposed ports/services on the Ubuntu server.
+
+![Nmap scan results](../screenshots/nmap-scan.png)
+
+Controlled Failed SSH Authentication
+To generate controlled authentication-failure activity and observe the evidence produced by the SSH service.
+Activity:Entered an incorrect password 2 times.
+Evidence: Permission denied` on Kali ![Denied](../screenshots/denied.png) 
+
+failed authentication entries in the Ubuntu SSH logs. ![SSH logs](../screenshots/ssh-logs.png)
+
+# Before vs After
+## Baseline
+
+What I observed:
+- `ssh.service` starts and listens on port 22
+- Successful password logins
+
+## Change (controlled activity)
+- `nmap ubuntuIP` from Kali, a default port scan that lasted 2.45 seconds.
+- Deliberate failed logins from my SSH log followed by a success.
+  
+## Comparison
+
+| Field | Content |
+|---|---|
+| Observation | 5 `Failed password` events in total, 3 login sequences, all ending in success. Each sequence reuses one source port, so each is a single SSH connection. |
+| Normal baseline | Clean `Accepted password` logins for known users, with no failures before them. |
+| Controlled activity |  One default Nmap scan from Kali. Wrong passwords entered deliberately |
+| Difference | New failure lines and a fail, fail, succeed pattern, with the same users and IPs. The source IPs and usernames stay the same as in the baseline. |
+| Security relevance | Scanning is reconnaissance. Failed logins are used in detection rules. |
+
+## Investigation
+
+**Observed:**
+- The scan found exactly two open services on the ubuntu vm
+- Every failed attempt used a valid account. There are no `Invalid user` lines.
+- No `root` attempts, and no other sources aside from my lab IPs.
+
+**Concluded:**
+- A success after failures is worth noting in a real SOC, but here it is low volume and from a known lab host for security testing.
+They look abnormal against the baseline, but that doesn't make them malicious
+
