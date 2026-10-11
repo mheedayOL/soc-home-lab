@@ -54,9 +54,8 @@ To build, baseline and investigate a small IT environment
 | --- | --- | --- | --- |
 | 135 | svchost (872) | Windows RPC, lets Windows components talk to each other | Expected |
 | 139 | System (4) | NetBIOS file and printer sharing on the LAN | Bound only to 192.168.253.131 |
-| 445 | System (4) | SMB file sharing | Expected, but historically abused (e.g. WannaCry) |
-| 3389 | svchost (4120) | Remote Desktop (RDP) | Means Remote Desktop is turned on. Worth noting as a way in if not needed |
-| 5040 | svchost (652) | Windows internal service | Expected |
+| 445 | System (4) | SMB file sharing | Expected |
+| 3389 | svchost (4120) | Remote Desktop (RDP) | Remote Desktop is turned on.|
 | 49664 | lsass (640) | Dynamic RPC port used by lsass | Expected |
 | 49665 | wininit (488) | Dynamic RPC port | Expected |
 | 49666, 49667 | svchost (1340, 1012) | Dynamic RPC ports | Expected |
@@ -228,10 +227,10 @@ Scenario: Reviewing the Ubuntu server's SSH log , I noticed repeated failed logi
 - **Observation:** Several failed SSH logins for alice in a short window.
 - **Evidence:** journalctl -u ssh showed repeated "Failed password for alice from 192.168.253.129" within about a minute, right after a port scan from the same IP found port 22 open.
 - **Interpretation:** Most likely password guessing (brute force) against alice, preceded by reconnaissance.
-- **Alternative explanation:** Could be harmless, the real user mistyping their password. Unusual does not automatically mean malicious.
-- **Conclusion:** The fact is "multiple failed SSH logins from 192.168.253.129 after a port scan from the same IP." Here I know it was my own test, so it was benign; in a real case it would justify a closer look, not yet a firm verdict.
+- **Alternative explanation:** Could be harmless, the real user forgot or mistyped their password. Unusual does not automatically mean malicious.
+- **Conclusion:** The fact is "multiple failed SSH logins from 192.168.253.129 after a port scan from the same IP." Here I know it was my own test, so it was benign; in a real case it would require a closer look.
 - **What I'd check next:** Did a successful login follow? Is 192.168.253.129 a known machine? Has it happened before, or hit other accounts?
 
 ### Conclusion
 
-I built a small three-machine environment, recorded what "normal" looks like for it, then ran a controlled test (a port scan and repeated failed SSH logins) and traced each action back to the log entry that recorded it. Since checking is currently manual and spread across machines, centralized monitoring (a SIEM) is the natural next step.
+After building a small three-machine environment and documenting what "normal" looked like for it, I conducted a controlled test (a port scan and several unsuccessful SSH logins) and traced each action to the log entry that captured it. Centralized monitoring (a SIEM) is the obvious next step because checking is now done manually and dispersed among devices.
