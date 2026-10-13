@@ -13,7 +13,7 @@ detection, alert triage, and investigation.
 Wazuh, Ubuntu Server, Windows 10
 
 ## Progress
-- [x] Lab planned
+- [x] Lab Setup
 - [x] Wazuh installed on Ubuntu Server
 - [x] Windows 10 agent connected
 - [ ] Simulated attacks and alert investigation
