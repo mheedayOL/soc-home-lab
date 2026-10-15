@@ -8,7 +8,7 @@ detection, alert triage, and investigation.
 - **Ubuntu Server**: Wazuh manager and dashboard
 - **Kali Linux**: Attacking machine
 - **Windows 10**: monitored endpoint with the Wazuh agent
-- **Virtualisation:** [VMware]
+- **Virtualisation:** VMware Pro Workstation
 
 ## Tools
 Wazuh, Ubuntu Server, Windows 10, Kali, Sysmon, Auditd
