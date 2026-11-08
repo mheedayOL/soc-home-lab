@@ -139,15 +139,24 @@ I ran the attack twice per scenario chain, then investigated the activity from w
 
 - *Failed and successful logins.*
 
-6 failed login events were recorded in wazuh dashboard, after which a normal logon was recorded, which was succeeded by a special logon event. The special logon was raised because the user who logged in has administrative privilege.
+4 failed login events were recorded in wazuh dashboard, after which a normal logon was recorded, which was succeeded by a special logon event. The special logon was raised because the user who logged in has administrative privilege.
 
-![active agents](../screenshots/active-logs.png)
+![authentication logs](../screenshots/default-windows.png)
 
 
 - *Outbound connection*
 
 Windows event viewer, with the default config, does not log network connection by, unless explicitly configured to do so (IDs 4688 and 5156)
 
+#### Sysmon
+
+- *Failed and successful logins*
+
+Sysmon does not monitor authentication activities, and so did not raise an alert for the failed and successful login activities.
+
+- *Outbound connection*
+
+Shortly after the login activity, alerts were raised about an outbound connection to 172.16.78.1, over http. Sysmon logged the process creation, outbound network connection, and file creation activity.
 
 ### Default Linux logs
 
