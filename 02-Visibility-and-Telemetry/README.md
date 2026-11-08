@@ -16,7 +16,7 @@
 - The Wazuh agent on Kali was not configured to read `audit.log`, so auditd evidence stayed local until the log source was added.
 - The auditd `connect` rule produced heavy noise from local socket calls and needed filtering by executable.
 
-**Confidence.** High for the failed-login activity, since multiple independent sources agree. Moderate to high for the outbound and download chain, because it depends on configuration we added.
+**Confidence.** High for the failed-login activity, since multiple independent sources agree. Moderate to high for the outbound and download chain, because it depends on configuration added.
 
 **Key gaps**
 - Windows process creation (4688) and network connection (5156) auditing are off by default.
@@ -173,13 +173,77 @@ Wazuh raised alerts from the default SSH and PAM logs. Rules 5760 (SSH authentic
 ![authentication logs](../screenshots/Screenshot-125.png)
 *failed authentication with kali user*
 
+- *Outbound connection*
+
+Default logging produced no event for the connection. The first sign of outbound activity, the destination, the process and the file name could not be obtained from the logs.
+
+### Auditd
+
+- *Failed and successful logins.*
+
+Wazuh also alerted on the failed logins during the Auditd run, but the alert came from the default Linux logging, not from Auditd. Auditd recorded failed attempts from 192.168.253.1 against `securedot`.
+- *Outbound Connection*
+
+Auditd captured the `execve` of `/usr/bin/wget`, [but my Wazuh couldn't get the alerts then I tried to create *wazuh-archives* then I had space issues].
+
 Default Linux logs fully covered the login stages but were blind to the download; Auditd closed that gap. 
 
+## Correlation Analysis
 
-Compare default Windows logging with Sysmon-enriched telemetry.
+On Linux, the two scenarios are related with high confidence when Auditd is enabled, and cannot be linked at all with default logging, because the outbound stage is missing.
 
-Compare default Linux logging with Auditd-enriched telemetry.
+| Question | Default logging | Auditd | Windows log | Sysmon |
+| --- | --- | --- | --- | --- |
+| Does the IP behind the failed and successful logins match the outbound destination? | Unknown, no outbound log | Yes, 192.168.253.1 | It was a local authentication |
+| Is the successful account the one that made the connection? | Unknown | Yes, `securedot` | Unknown | Yes, administrator |
+| Can one session ID be traced from login to connection? | Unknown | Yes, session 37 | Unknown | Yes, LogonId 0x3e7 |
+| Did the connection follow the login closely? | Unknown | Yes, login at 02:10:23, `wget` 02:18:32 (8 minutes) | Unknown | Yes |
+| Did the process spawn from the compromised login session? | Unknown | Yes, session 37 and auid 1000 match | Unknown | Yes |
 
+## Visibility Comparison
 
+| Activity / question | Windows logs | Sysmon | Linux logs | Auditd | Analyst note |
+| --- | --- | --- | --- | --- | --- |
+| Who logged in, and from where? | Yes (`administrator`) | Default windows log is enough for login activities | Yes (`securedot`, 192.168.253.1) | Yes (From default logging) | Default SSH and PAM logs are enough for the login stages. |
+| Who performed the download? | No | Yes (`adminstrator`) | No | Yes (`securedot`, auid 1000) | Auditd ties the action to the login identity. |
+| What command ran? | No | Yes, (`curl.exe`), full command specified | No | Yes (`wget` with arguments) | Arguments revealed the URL and file name. |
+| Which process was involved? | No | Yes (`powershell.exe and curl.exe`) | No | Yes (`/usr/bin/wget`) | Enrichments were visibly helpful |
+| What file was downloaded? | No | Yes | No | Yes | Name proven from arguments; file creation on disk not shown. |
+| Can the stages be linked? | No | Yes, via the LogOn ID | No | Yes (session 37, auid 1000) | Session ID and auid are the strongest links. |
 
-Communicate technical findings to both analysts and management.
+**Investigative value of enrichment:** Without Auditd, the investigation stops at the login: we could only see a brute-force success and nothing after it. With Auditd, the same alert can be followed through what the attacker did next.
+
+Without sysmon, an analyst would not know what happened during the network connection, or how the network connection was made. But adding sysmon made it possible to trace the attacker’s activities across the system.
+
+## Visibility Gap Analysis
+
+With default Linux logging, every outbound question was unanswerable; with Auditd, two smaller gaps remain.
+
+- **Linux**
+
+| Unanswered question | Why evidence is missing | Required telemetry / configuration | Priority |
+| --- | --- | --- | --- |
+| First sign of outbound activity, process, destination and file (default logging) | Default logs record authentication, not process execution or network activity | Auditd  rules should be forwarded to Wazuh | High |
+| Was the file written to disk, and where? | No file-creation event in the collected evidence | Auditd file-watch rule on download directories | Low |
+
+- **Windows**
+
+| Unanswered question | Why evidence is missing | Required telemetry / configuration | Priority |
+| --- | --- | --- | --- |
+| The exact command that used curl.exe (default logging) | Windows doesn’t log that by default | Sysmon rules forwarded to Wazuh | High |
+
+## Findings and Lessons Learned
+
+1. **Centralized logging is not telemetry generation.** Wazuh alerted reliably on what the host logged, and could not see what the host never recorded. The download was invisible until Auditd and Sysmon produced events.
+2. **Default logs cover authentication well.** It gave start, count, target account, source IP (where applicable) and the successful login.
+3. **Session ID and auid are the glue.** Session 37 and auid 1000 tied `wget` to the SSH login, so did the Logon ID (0x3e7) in windows, turning two separate alerts into one incident.
+4. **A fast attacker leaves a short window.** Login to download took seconds, so alerting must be in real time.
+5. **Rule layer matters.** The Auditd/Sysmon run's failed-login alert came from default logging, and only the custom rules alerted on the download. Raw Auditd data without rules would not alert.
+
+## Conclusion
+
+The evidence collected is enough to explain both simulated incidents with confidence.
+
+**Confidence.** High on both systems when Auditd and Sysmon are enabled. With default logging alone, I’d be confident about the logins but not about the download, because default logs showed nothing about it.
+
+Default logging tells you someone got in, but not what they did next. Turning on Auditd and Sysmon, and alerting on outbound downloads, is a cheap change that turns a plain login alert into a full incident story.
