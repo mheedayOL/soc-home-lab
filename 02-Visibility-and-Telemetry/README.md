@@ -143,8 +143,9 @@ I ran the attack twice per scenario chain, then investigated the activity from w
 
 ![authentication logs](../screenshots/default-windows.png)
 *failed logins as alerted by wazuh*
-![authentication logs](../screenshots/screenshot-118.png)
+![authentication logs](../screenshots/Screenshot-118.png)
 *logon type and ip address*
+
 - *Outbound connection*
 
 Windows event viewer, with the default config, does not log network connection by, unless explicitly configured to do so (IDs 4688 and 5156)
@@ -157,13 +158,20 @@ Sysmon does not monitor authentication activities, and so did not raise an alert
 
 - *Outbound connection*
 
-Shortly after the login activity, alerts were raised about an outbound connection to 172.16.78.1, over http. Sysmon logged the process creation, outbound network connection, and file creation activity.
+Shortly after the login activity, alerts were raised about an outbound connection over http. Sysmon logged the process creation, outbound network connection, and file creation activity.
+
+![authentication logs](../screenshots/wazuh-sysmon-evidence.png)
+![authentication logs](../screenshots/windows-file-download.png)
 
 ### Default Linux logs
 
 - *Failed and successful login*
 Wazuh raised alerts from the default SSH and PAM logs. Rules 5760 (SSH authentication failed), 5503 (PAM login failed) and 5763 (SSH brute force) cover the attack, and rule 5501 (PAM login session opened) covers the success.
 
+![authentication logs](../screenshots/linux-evidence.png)
+*failed authentication with fake user*
+![authentication logs](../screenshots/Screenshot-125.png)
+*failed authentication with kali user*
 
 Default Linux logs fully covered the login stages but were blind to the download; Auditd closed that gap. 
 
