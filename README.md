@@ -11,7 +11,7 @@ detection, alert triage, and investigation.
 - **Virtualisation:** VMware Pro Workstation
 
 ## Tools
-Wazuh, Ubuntu Server, Windows 10, Kali, Sysmon, Auditd
+Wazuh, Ubuntu Server, Windows 10, Kali, Sysmon, Auditd, MITRE ATT&CK Navigator, Wireshark
 
 ## Progress
 - [x] Lab Setup
@@ -23,6 +23,8 @@ Wazuh, Ubuntu Server, Windows 10, Kali, Sysmon, Auditd
 ## Write-ups
 - Part 1: 01-lab-setup
 - Part 2: Visibility and Telemetry
+- Part 3: RDP Compromise and MITRE ATT&CK Mapping
+- Part 4: Network Security Monitoring
 - Each stage will be added as a folder in this repo.
 
 ## Disclaimer
