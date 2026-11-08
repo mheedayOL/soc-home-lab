@@ -142,8 +142,9 @@ I ran the attack twice per scenario chain, then investigated the activity from w
 4 failed login events were recorded in wazuh dashboard, after which a normal logon was recorded, which was succeeded by a special logon event. The special logon was raised because the user who logged in has administrative privilege.
 
 ![authentication logs](../screenshots/default-windows.png)
-
-
+*failed logins as alerted by wazuh*
+![authentication logs](../screenshots/screenshot-118.png)
+*logon type and ip address*
 - *Outbound connection*
 
 Windows event viewer, with the default config, does not log network connection by, unless explicitly configured to do so (IDs 4688 and 5156)
