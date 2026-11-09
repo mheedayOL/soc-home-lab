@@ -58,7 +58,7 @@ One file covers both activities. It contains the TCP handshake and the TLS Clien
 |---|---|
 | Source IP (Kali) | `192.168.253.128` |
 | Destination IP (httpbin.org) | `3.221.253.123` |
-| Source port | `443` |
+| Source port | `47986` |
 | Server port | `80` |
 | Protocols | TCP, HTTP |
 
@@ -90,9 +90,7 @@ One file covers both activities. It contains the TCP handshake and the TLS Clien
 
 Right-click a packet, then **Follow > HTTP Stream**, to read the whole conversation.
 
-![HTTP stream showing form data in clear text](.../screenshots/http_stream.png)
-
-Packets worth highlighting: the TCP handshake (SYN, SYN-ACK, ACK), the POST request with the form data, the server's reply, and the connection closing.
+![HTTP stream showing form data in clear text](../screenshots/http_stream.png)
 
 ---
 
@@ -141,15 +139,13 @@ Packets worth highlighting: the TCP handshake (SYN, SYN-ACK, ACK), the POST requ
 
 ### Evidence
 
-![Client Hello showing the SNI](.../screenshots/client-hello-sni.png)
-
-Packets worth highlighting: the TCP handshake, the Client Hello with the SNI, the Server Hello, and the encrypted Application Data.
+![Client Hello showing the SNI](../screenshots/client-hello-sni.png)
 
 ---
 
 ## HTTP vs HTTPS Comparison
 
-| | HTTP | HTTPS |
+| Item | HTTP | HTTPS |
 |---|---|---|
 | Port | 80 | 443 |
 | Encryption | None | TLS |
@@ -158,7 +154,7 @@ Packets worth highlighting: the TCP handshake, the Client Hello with the SNI, th
 | Server identity checked? | No | Yes, with a certificate |
 | Main Wireshark filter | `http` | `tls` |
 
-**Why HTTPS is safer:** `[Explain in your own words, 2 to 3 sentences.]`
+**Why HTTPS is safer:** `HTTPS is safer as it ensures that information is encrypted while in transit. Now this doesn't mean that the site itself is safe, it only helps to ensure that the site is secure and encrypted over the network.`
 
 ---
 
@@ -189,23 +185,9 @@ Packets worth highlighting: the TCP handshake, the Client Hello with the SNI, th
 | Old TLS or weak ciphers | Use TLS 1.2 or 1.3 only |
 | Bad or expired certificates | Use certificates from a trusted CA and watch the expiry |
 | Encrypted traffic can hide attacks | Monitor the SNI, certificates, traffic patterns and logs |
-| `[our own observation]` | `[our recommendation]` |
 
----
-
-## Repository Contents
-
-```
-.
-├── README.md
-├── captures/
-│   └── [filename].pcap
-└── screenshots/
-    ├── http-stream.png
-    └── client-hello-sni.png
-```
 
 
 ## Disclaimer
 
-This work was done in a controlled lab environment against a public testing service (`httpbin.org`) using dummy data, for educational purposes only. Only capture traffic on networks and systems you own or have permission to monitor.
+This work was done in a controlled lab environment against a public testing service (`httpbin.org`) using dummy data, for educational purposes only.
