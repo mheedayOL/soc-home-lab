@@ -90,7 +90,7 @@ One file covers both activities. It contains the TCP handshake and the TLS Clien
 
 Right-click a packet, then **Follow > HTTP Stream**, to read the whole conversation.
 
-![HTTP stream showing form data in clear text](screenshots/http_stream.png)
+![HTTP stream showing form data in clear text](.../screenshots/http_stream.png)
 
 Packets worth highlighting: the TCP handshake (SYN, SYN-ACK, ACK), the POST request with the form data, the server's reply, and the connection closing.
 
@@ -141,7 +141,7 @@ Packets worth highlighting: the TCP handshake (SYN, SYN-ACK, ACK), the POST requ
 
 ### Evidence
 
-![Client Hello showing the SNI](screenshots/client-hello-sni.png)
+![Client Hello showing the SNI](.../screenshots/client-hello-sni.png)
 
 Packets worth highlighting: the TCP handshake, the Client Hello with the SNI, the Server Hello, and the encrypted Application Data.
 
