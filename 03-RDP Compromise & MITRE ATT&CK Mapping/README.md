@@ -30,7 +30,7 @@ Before disconnecting, the attacker cleared the Windows Security and Sysmon event
 
 I mapped the attack to the updated MITRE ATT&CK Enterprise Matrix using ATT&CK Navigator. The layer has nine techniques, in attack order. A technique and its sub-technique count as one step.
 
-**Navigator layer:** ![SVG capture](../screenshots/screencapture_file.png)
+**Navigator layer:** ![SVG capture](../screenshots/screencapture_file.jpeg)
 
 This is a mapping of a hypothetical scenario. Not every technique has log evidence in my lab.
 
@@ -46,3 +46,21 @@ This is a mapping of a hypothetical scenario. Not every technique has log eviden
 | 6 | Execution | T1059.001 | Command and Scripting Interpreter: PowerShell | TCP socket script run in PowerShell |
 | 7 | Exfiltration | T1048.003 | Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol | Raw TCP stream to Netcat on port 4444 |
 | 8 | Defense Impairment | T1685.005 | Disable or Modify Tools: Clear Windows Event Logs | wevtutil used on the Security and Sysmon logs |
+
+## Wazuh Investigation
+
+For each stage of the attack I picked the Windows or Sysmon event that should exist, searched for it in Wazuh, and recorded the fields.
+
+### Lab Environment
+
+| Component | Role | Detail |
+| --- | --- | --- |
+| Windows endpoint | Target | Hostname securedot, Wazuh agent windows_agent, IP 192.168.253.1, Sysmon installed |
+| Kali Linux | Attacker | IP 192.168.253.128, workstation name kali, Netcat listener on port 4444 |
+| Ubuntu Server | Wazuh manager | Hostname Wazuhserver |
+
+All testing ran on an isolated lab network.
+
+
+
+
