@@ -30,21 +30,19 @@ Before disconnecting, the attacker cleared the Windows Security and Sysmon event
 
 I mapped the attack to the updated MITRE ATT&CK Enterprise Matrix using ATT&CK Navigator. The layer has nine techniques, in attack order. A technique and its sub-technique count as one step.
 
-**Navigator layer:** ![SVG capture](../screenshots/screencapture-file.png)
+**Navigator layer:** ![SVG capture](../screenshots/screencapture_file.png)
 
 This is a mapping of a hypothetical scenario. Not every technique has log evidence in my lab.
 
 ### Techniques in attack sequence
 
-| # |	Tactic	| ID	| Technique |
-| --- | --- | --- | --- |
-| 1	| Initial Access	| T1133	| External Remote Services (exposed RDP)| 
-| 2 |	Credential Access	| T1110.001	| Brute Force: Password Guessing |
-| 3	| Lateral Movement	| T1021.001	| Remote Services: Remote Desktop Protocol |
-| 4	| Credential Access	| T1552.001	| Unsecured Credentials: Credentials In Files |
-| 5	| Priv. Esc. / Persistence	| T1078.003	| Valid Accounts: Local Accounts (Manager) |
-| 6	| Collection	| T1005 |	Data from Local System |
-| 7	| Execution	| T1059.001	| Command and Scripting Interpreter: PowerShell |
-| 8	| Exfiltration	| T1048.003	| Exfiltration Over Unencrypted Non-C2 Protocol |
-| 9	| Defense Evasion	| T1070.001 |	Indicator Removal: Clear Windows Event Logs |
-
+| # | Tactic | ID | Technique | My attack |
+| --- | --- | --- | --- | --- |
+| 1 | Initial Access | T1133 | External Remote Services | RDP exposed to the attacker |
+| 2 | Credential Access | T1110.001 | Brute Force: Password Guessing | Repeated guesses against the Intern account |
+| 3 | Credential Access | T1552.001 | Unsecured Credentials: Credentials In Files | Default password read from Employee_Onboarding.pdf |
+| 4 | Privilege Escalation | T1078.003 | Valid Accounts: Local Accounts | Login as the Manager account (local admin) |
+| 5 | Collection | T1005 | Data from Local System | Trade Secret.docx found on the Manager desktop |
+| 6 | Execution | T1059.001 | Command and Scripting Interpreter: PowerShell | TCP socket script run in PowerShell |
+| 7 | Exfiltration | T1048.003 | Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol | Raw TCP stream to Netcat on port 4444 |
+| 8 | Defense Impairment | T1685.005 | Disable or Modify Tools: Clear Windows Event Logs | wevtutil used on the Security and Sysmon logs |
